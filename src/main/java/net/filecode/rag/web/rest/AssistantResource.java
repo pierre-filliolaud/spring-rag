@@ -1,15 +1,15 @@
 package net.filecode.rag.web.rest;
 
-import net.filecode.rag.service.AssistantService;
+import net.filecode.rag.service.AssistantAiService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AssistantResource {
-    private final AssistantService assistantService;
+    private final AssistantAiService assistantService;
 
-    AssistantResource(AssistantService assistantService) {
+    AssistantResource(AssistantAiService assistantService) {
         this.assistantService = assistantService;
     }
 
