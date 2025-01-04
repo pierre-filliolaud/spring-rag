@@ -1,0 +1,12 @@
+package net.filecode.rag.service;
+
+import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.service.spring.AiService;
+
+@AiService
+public interface AssistantService {
+
+    @SystemMessage(fromResource = "/prompts/system.st")
+    String chat(String userMessage);
+
+}
