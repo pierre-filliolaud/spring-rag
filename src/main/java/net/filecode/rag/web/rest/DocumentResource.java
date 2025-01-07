@@ -58,6 +58,12 @@ public class DocumentResource {
         return ResponseEntity.of(document);
     }
 
+    @DeleteMapping("/documents/{id}")
+    public void deleteDocument(@PathVariable Long id) {
+        log.debug("REST request to delete Document : {}", id);
+        documentService.deleteById(id);
+    }
+
     @PostMapping("/documents/chat/{user}")
     public String chat(@PathVariable UUID user, @RequestBody String query) throws InterruptedException {
         SseEmitter emitter = new SseEmitter();
@@ -94,6 +100,13 @@ public class DocumentResource {
         }
 //        return emitter;
         return myMessage.get();
+    }
+
+    @PostMapping("/documents/chat2/{user}")
+    public String chat2(@RequestBody String query) throws InterruptedException {
+        String result = documentService.chat(query);
+
+        return result;
     }
 
     private static void sendMessage(SseEmitter emitter, String message) throws IOException {

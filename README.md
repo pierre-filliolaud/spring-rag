@@ -77,3 +77,32 @@ http://localhost:8080/swagger-ui/index.html
   "content": "A young girl observes her father's fight against racial injustice."
 }
 ```
+
+```json
+{
+  "title": "Marley & Me",
+  "description": "A memoir by John Grogan that tells the heartwarming and humorous story of a family s life with their mischievous Labrador Retriever, Marley.",
+  "author": "John Grogan",
+  "publisher": "William Morrow",
+  "publishedDate": "2005",
+  "contentType": "Memoir",
+  "content": "The story of a family's bond with their lovable but unruly dog, Marley."
+}
+```
+
+```json
+{
+  "title": "A Dog s Purpose",
+  "description": "A novel by W. Bruce Cameron that explores the journey of a dog through multiple lives, discovering his purpose through his relationships with various owners.",
+  "author": "W. Bruce Cameron",
+  "publisher": "Forge Books",
+  "publishedDate": "2010",
+  "contentType": "Novel",
+  "content": "A dog reincarnates to find his purpose in life through his human companions."
+}
+```
+
+```
+give me a fantasy book
+give me a book about pets
+```
