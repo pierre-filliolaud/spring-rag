@@ -115,6 +115,7 @@ public class DocumentService {
         }
     }
 
+    @SuppressWarnings("removal")
     public String chat(String request) {
         Embedding embeddedQuestion = embeddingModel.embed(request).content();
         List<EmbeddingMatch<TextSegment>> relevant = embeddingStore.findRelevant(embeddedQuestion, 3);
