@@ -1,26 +1,38 @@
 package net.filecode.rag.web.rest;
 
 import net.filecode.rag.domain.Document;
+import net.filecode.rag.service.DocumentAiService;
 import net.filecode.rag.service.DocumentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
 public class DocumentResource {
 
     private final Logger log = LoggerFactory.getLogger(DocumentResource.class);
 
-    private final DocumentService documentService;
+    private final ExecutorService nonBlockingService = Executors.newCachedThreadPool();
 
-    public DocumentResource(DocumentService documentService) {
+    private final DocumentService documentService;
+    private final DocumentAiService documentAiService;
+
+    public DocumentResource(DocumentService documentService, DocumentAiService documentAiService) {
         this.documentService = documentService;
+        this.documentAiService = documentAiService;
     }
 
     @PostMapping("/documents")
@@ -44,5 +56,52 @@ public class DocumentResource {
         log.debug("REST request to get Document : {}", id);
         Optional<Document> document = documentService.findById(id);
         return ResponseEntity.of(document);
+    }
+
+    @PostMapping("/documents/chat/{user}")
+    public String chat(@PathVariable UUID user, @RequestBody String query) throws InterruptedException {
+        SseEmitter emitter = new SseEmitter();
+        AtomicBoolean completed = new AtomicBoolean(false);
+        AtomicReference<String> myMessage = new AtomicReference<>();
+        nonBlockingService.execute(() -> documentAiService.chat(user, query)
+                .onNext(message -> {
+                    try {
+                        sendMessage(emitter, message);
+                        myMessage.set(message);
+                    }
+                    catch (IOException e) {
+                        log.error("Error while writing next token", e);
+                        emitter.completeWithError(e);
+                    }
+                })
+                .onComplete(token -> {
+                    emitter.complete();
+                    completed.set(true);
+                })
+                .onError(error -> {
+                    log.error("Unexpected chat error", error);
+                    try {
+                        sendMessage(emitter, error.getMessage());
+                    }
+                    catch (IOException e) {
+                        log.error("Error while writing next token", e);
+                    }
+                    emitter.completeWithError(error);
+                })
+                .start());
+        while (!completed.get()) {
+            Thread.sleep(1000);
+        }
+//        return emitter;
+        return myMessage.get();
+    }
+
+    private static void sendMessage(SseEmitter emitter, String message) throws IOException {
+        String token = message
+                // Hack line break problem when using Server Sent Events (SSE)
+                .replace("\n", "<br>")
+                // Escape JSON quotes
+                .replace("\"", "\\\"");
+        emitter.send("{\"t\": \"" + token + "\"}");
     }
 }
