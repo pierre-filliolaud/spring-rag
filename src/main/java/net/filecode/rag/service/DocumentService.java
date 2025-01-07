@@ -85,16 +85,17 @@ public class DocumentService {
     public void loadDocumentDataToEmbeddingStoreOnStartup(ApplicationStartedEvent event) {
         Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE);
         Page<Document> documentsPage = documentRepository.findAll(pageable);
+        if (documentsPage.hasContent()) {
+            String documentsAsJson = convertListToJson(documentsPage.getContent());
 
-        String documentsAsJson = convertListToJson(documentsPage.getContent());
+            EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
+                    .documentSplitter(new DocumentByLineSplitter(1000, 200))
+                    .embeddingModel(embeddingModel)
+                    .embeddingStore(embeddingStore)
+                    .build();
 
-        EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
-                .documentSplitter(new DocumentByLineSplitter(1000, 200))
-                .embeddingModel(embeddingModel)
-                .embeddingStore(embeddingStore)
-                .build();
-
-        ingestor.ingest(new dev.langchain4j.data.document.Document(documentsAsJson));
+            ingestor.ingest(new dev.langchain4j.data.document.Document(documentsAsJson));
+        }
     }
 
     public String convertListToJson(List<Document> documents) {
