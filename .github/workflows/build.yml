@@ -97,7 +97,9 @@ jobs:
       - name: Try the Kubernetes cluster
         run: kubectl get nodes
       - name: Deploy the image to minikube
-        run: kubectl apply -f src/main/k8s/deployment.yml
+        run: |
+          docker pull filliolaud/spring-rag:latest
+          kubectl apply -f src/main/k8s/deployment.yml
       - name: Get Kubernetes service URL
         run: |
           kubectl describe pod -l app=spring-rag
