@@ -2,7 +2,12 @@
 
 ## Build docker image
 ```shell
-docker build -t my-springboot-app .
+docker build -t spring-rag .
+```
+
+```shell
+docker run --rm -p 8080:8080 spring-rag:latest
+docker run --rm -p 8080:8080 filliolaud/spring-rag:latest
 ```
 
 
