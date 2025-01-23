@@ -21,7 +21,7 @@ spec:
       containers:
         - name: spring-rag
           image: filliolaud/spring-rag:latest
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           resources: {}
