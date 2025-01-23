@@ -110,8 +110,6 @@ jobs:
           minikube service list
           minikube service spring-rag --url
           echo "------------------opening the service------------------"
-        with:
-          timeout_seconds: 120
       - name: Test Kubernetes service URL
         uses: nick-fields/retry@v2
         with:
