@@ -90,8 +90,8 @@ jobs:
 
   kubernetes:
     runs-on: ubuntu-latest
-    name: build
     steps:
+      - uses: actions/checkout@v2
       - name: Start Kubernetes minikube
         uses: medyagh/setup-minikube@master
       - name: Try the Kubernetes cluster
