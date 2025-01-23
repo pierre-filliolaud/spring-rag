@@ -107,6 +107,7 @@ jobs:
           minikube service list
           minikube service spring-rag --url
           echo "------------------opening the service------------------"
+          sleep 40
       - name: Test Kubernetes service URL
         uses: nick-fields/retry@v2
         with:
