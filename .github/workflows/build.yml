@@ -100,7 +100,9 @@ jobs:
         run: kubectl apply -f src/main/k8s/deployment.yml
       - name: Get Kubernetes service URL
         run: |
-          kubectl wait --for=condition=Ready pod -l app=spring-rag
+          kubectl describe pod -l app=spring-rag
+          kubectl logs $(kubectl get pods -l app=spring-rag -o name)
+          kubectl wait --for=condition=Ready pod -l app=spring-rag --timeout=120s
           kubectl get pods
           minikube service list
           minikube service spring-rag --url
