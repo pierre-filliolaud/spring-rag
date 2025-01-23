@@ -105,7 +105,8 @@ jobs:
           kubectl wait --for=condition=Ready pod -l app=spring-rag --timeout=120s
           kubectl get pods
           minikube service list
-          minikube service spring-rag --url
+          SERVICE_URL=$(minikube service spring-rag --url)
+          echo "${SERVICE_URL}/samples/EFREI"
           echo "------------------opening the service------------------"
           sleep 40
       - name: Test Kubernetes service URL
