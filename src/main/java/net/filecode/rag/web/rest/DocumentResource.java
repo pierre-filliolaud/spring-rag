@@ -41,7 +41,7 @@ public class DocumentResource {
         Document result = documentService.buildAndSave(document);
 
         return ResponseEntity
-                .created(new URI("/api/documents/" + result.getId()))
+                .created(new URI("/documents/" + result.getId()))
                 .body(result);
     }
 

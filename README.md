@@ -10,6 +10,11 @@ docker run --rm -p 8080:8080 spring-rag:latest
 docker run --rm -p 8080:8080 filliolaud/spring-rag:latest
 ```
 
+```shell
+kubectl cluster-info
+kubectl config current-context
+```
+
 
 ## Chat with my Assistant
 ```shell
