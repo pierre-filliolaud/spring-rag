@@ -90,6 +90,7 @@ jobs:
 
   kubernetes:
     runs-on: ubuntu-latest
+    needs: docker
     steps:
       - uses: actions/checkout@v2
       - name: Start Kubernetes minikube
